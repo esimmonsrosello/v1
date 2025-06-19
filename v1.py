@@ -15,6 +15,7 @@ from Bio.Seq import Seq
 import logging
 import json
 import math
+import time
 import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 from openpyxl.drawing.image import Image
@@ -683,6 +684,15 @@ def run_optimization(clean_seq, protein_seq, choice): # Full version
                     ax.axis('equal')
                     plt.tight_layout()
                     plt.show()
+                    # Loop to wait for the plot window to be closed by the user
+                    while plt.fignum_exists(fig.number):
+                        # Process Matplotlib events
+                        fig.canvas.flush_events()
+                        # Process Tkinter events to keep the main GUI responsive
+                        root.update_idletasks()
+                        root.update()
+                        # Small pause to prevent high CPU usage from the loop
+                        time.sleep(0.05)
                     # Removed plt.close(fig) - this was closing the chart immediately
                     logger.info("Chart for choice 6 displayed directly as combine_outputs_var is false.")
                     set_macos_app_icon(root, logger) # Re-apply icon after matplotlib window
